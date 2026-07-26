@@ -159,71 +159,8 @@ Each user-submitted code runs inside a container with the following hard limits 
 | Cap-drop | `ALL` | Drops all Linux capabilities |
 | Auto-remove | `true` | Container deleted on exit |
 
----
 
-## 🚀 Deployment Guide
 
-### Frontend → Vercel
-
-1. Connect your GitHub repo to [Vercel](https://vercel.com/).
-2. Set the **Root Directory** to `frontend`.
-3. Framework preset: **Angular**.
-4. Set the environment variable `NG_APP_WS_URL` or update `environment.prod.ts` with your Render URL before deploying:
-   ```
-   wss://your-render-service.onrender.com/interactive
-   ```
-
-### API Gateway → Render
-
-1. Create a new **Web Service** on [Render](https://render.com/).
-2. Set **Root Directory** to `server`.
-3. Runtime: **Docker** (Render builds using `server/Dockerfile`, default `CMD` runs the API).
-4. Add environment variables:
-
-   | Variable | Value |
-   | :--- | :--- |
-   | `NODE_ENV` | `production` |
-   | `PORT` | `3000` |
-   | `REDIS_HOST` | `<your-upstash-endpoint>` |
-   | `REDIS_PORT` | `6379` |
-   | `REDIS_PASSWORD` | `<your-upstash-password>` |
-
-### Execution Worker → VPS
-
-The Worker **must run on a VPS** (AWS EC2, DigitalOcean, Hetzner, etc.) with a Docker daemon, because it mounts `/var/run/docker.sock` to spawn sandbox containers.
-
-```bash
-# 1. Install Docker
-curl -fsSL https://get.docker.com | sudo sh
-
-# 2. Pre-pull sandbox language images (avoids cold-start timeouts)
-sudo docker pull python:3.10-alpine
-sudo docker pull gcc:12
-sudo docker pull eclipse-temurin:17-alpine
-
-# 3. Clone the repo
-git clone https://github.com/aryanrathod1511/code_execution.git
-cd code_execution/server
-
-# 4. Create .env file
-cat > .env <<EOF
-NODE_ENV=production
-REDIS_HOST=your-upstash-endpoint.upstash.io
-REDIS_PORT=6379
-REDIS_PASSWORD=your-upstash-password
-CONCURRENCY=4
-EOF
-
-# 5. Start the worker
-sudo docker compose -f docker-compose.worker.yml up -d
-
-# 6. View logs
-sudo docker compose -f docker-compose.worker.yml logs -f
-```
-
-> **Note:** No inbound ports need to be opened on the VPS. The worker only makes outbound connections to Redis. Close all inbound traffic except SSH (port 22).
-
----
 
 ## 💻 Local Development
 
