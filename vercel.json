@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm install && npm run build",
+  "buildCommand": "cd frontend && npm install && echo \"export const environment = { production: true, wsUrl: '$WS_URL' };\" > src/environments/environment.prod.ts && npm run build",
   "installCommand": "echo skip",
   "functions": {
     "frontend/dist/frontend/server/server.mjs": {
