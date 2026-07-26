@@ -1,0 +1,33 @@
+<div class="flex flex-col h-screen w-screen overflow-hidden font-sans bg-bg-main text-text-main"
+  [ngClass]="isDarkTheme() ? 'dark-theme' : ''">
+  <!-- Dynamic Aesthetic Topbar (Programiz Style) -->
+  <header
+    class="w-full h-16 flex items-center justify-between px-6 flex-shrink-0 select-none shadow-md z-50 border-b bg-bg-header border-border-main">
+    <div class="flex items-center gap-3">
+      <!-- Brand Group -->
+      <div class="flex flex-col">
+        <div class="flex items-center">
+          <span class="text-xl font-black tracking-tight flex items-center select-none font-sans text-text-main">
+            CompileX
+          </span>
+        </div>
+        <span class="text-[11px] font-semibold mt-0.5 tracking-wide text-text-muted">{{ currentLanguageLabel }} Online
+          Compiler</span>
+      </div>
+    </div>
+
+    <!-- Active State Status Badge + GitHub Link -->
+    <div class="flex items-center gap-4">
+
+      <a href="https://github.com/aryanrathod1511/code_execution" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition-all duration-200 shadow-sm border border-border-button bg-bg-main hover:bg-bg-button-hover text-text-muted hover:text-text-main">
+        GitHub <span>↗</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Viewport Area (No Paddings for Flush IDE) -->
+  <main class="flex-1 min-h-0 w-full overflow-hidden bg-bg-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>

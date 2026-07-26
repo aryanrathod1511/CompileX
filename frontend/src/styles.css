@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* ── Theme CSS Variables ───────────────────────────── */
+/* Default: Light Theme (warm cream) */
+:root {
+  --theme-bg-main:          #faf6ee;
+  --theme-bg-header:        #f3ede2;
+  --theme-bg-sidebar:       #f3ede2;
+  --theme-bg-panel-header:  #f3ede2;
+  --theme-border-main:      #e6dcce;
+
+  --theme-text-main:        #3e382f;
+  --theme-text-muted:       #6c5f4c;
+  --theme-text-tab:         #4a4338;
+
+  --theme-bg-tab-active:    #faf6ee;
+  --theme-bg-button-hover:  #f5eedc;
+  --theme-border-button:    #e6dcce;
+
+  --monaco-dark-bg:         #1c2130;
+  --monaco-dark-highlight:  #22293c;
+  --monaco-light-bg:        #faf6ee;
+  --monaco-light-highlight: #f5eedc;
+}
+
+/* Dark Theme overrides */
+.dark-theme {
+  --theme-bg-main:          #1c2130;
+  --theme-bg-header:        #141822;
+  --theme-bg-sidebar:       #141822;
+  --theme-bg-panel-header:  #141822;
+  --theme-border-main:      #2a3248;
+
+  --theme-text-main:        #f4f4f5;
+  --theme-text-muted:       #a1a1aa;
+  --theme-text-tab:         #ffffff;
+
+  --theme-bg-tab-active:    #1c2130;
+  --theme-bg-button-hover:  #22293c;
+  --theme-border-button:    #2a3248;
+}
+
+/* ── Tailwind v4 Theme Tokens (reference the CSS vars) ── */
+@theme {
+  --color-bg-main:         var(--theme-bg-main);
+  --color-bg-header:       var(--theme-bg-header);
+  --color-bg-sidebar:      var(--theme-bg-sidebar);
+  --color-bg-panel-header: var(--theme-bg-panel-header);
+  --color-border-main:     var(--theme-border-main);
+
+  --color-text-main:       var(--theme-text-main);
+  --color-text-muted:      var(--theme-text-muted);
+  --color-text-tab:        var(--theme-text-tab);
+
+  --color-bg-tab-active:   var(--theme-bg-tab-active);
+  --color-bg-button-hover: var(--theme-bg-button-hover);
+  --color-border-button:   var(--theme-border-button);
+}
+
+@layer base {
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+    background-color: var(--theme-bg-main);
+    color: var(--theme-text-main);
+    transition: background-color 0.2s, color 0.2s;
+  }
+}
+

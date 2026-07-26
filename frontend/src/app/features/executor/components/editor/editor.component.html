@@ -1,0 +1,74 @@
+<div class="flex flex-col h-full w-full overflow-hidden relative bg-bg-main">
+
+  <!-- Panel Header -->
+  <header class="flex items-center justify-between h-12 border-b flex-shrink-0 select-none px-4 bg-bg-panel-header border-border-main text-text-main">
+    <!-- Left Side: Active Filename Tab -->
+    <div class="flex h-full items-end">
+      <div class="flex items-center gap-2.5 px-6 h-10 border-t-2 border-[#5856d6] text-xs font-bold font-mono select-none tracking-wide translate-y-[1px] rounded-t-lg border-l border-r bg-bg-main text-text-main border-l-border-main border-r-border-main">
+        {{ getActiveFilename() }}
+      </div>
+    </div>
+
+    <!-- Right Side: Editor Toolbar Buttons -->
+    <div class="flex items-center gap-1.5 relative">
+
+      <!-- Theme Switcher -->
+      <button
+        (click)="onThemeToggle()"
+        class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors cursor-pointer text-text-muted hover:text-text-main hover:bg-bg-button-hover"
+        title="Toggle Theme"
+      >
+        @if (isDarkTheme()) {
+          <!-- Sun icon: dark mode shows sun to switch to light -->
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        } @else {
+          <!-- Moon icon: light mode shows moon to switch to dark -->
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        }
+      </button>
+
+      <!-- Share Button -->
+      <button
+        (click)="onShare()"
+        class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer border bg-bg-main text-text-muted hover:text-text-main border-border-button hover:bg-bg-button-hover"
+        title="Copy Share Link"
+      >
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>Share</span>
+      </button>
+
+      <!-- Link Copied Popover -->
+      @if (showCopySuccess()) {
+        <div class="absolute right-14 top-10 bg-zinc-950 text-white border border-zinc-800 text-[10px] font-bold px-2.5 py-1 rounded shadow-xl z-50">
+          Share Link Copied!
+        </div>
+      }
+
+      <!-- Run Button -->
+      <button
+        class="flex items-center justify-center gap-1.5 px-5 py-1.5 text-xs font-bold rounded shadow-md transition-all select-none cursor-pointer disabled:cursor-not-allowed text-white"
+        [disabled]="status() === 'running' || status() === 'connecting'"
+        [ngClass]="(status() === 'running' || status() === 'connecting')
+          ? 'bg-[#4745c2]/50 text-zinc-300 shadow-none cursor-not-allowed'
+          : 'bg-[#5856d6] hover:bg-[#4745c2]'"
+        (click)="onRun()"
+        id="run-code-btn"
+      >
+        @if (status() === 'running' || status() === 'connecting') {
+          <span class="animate-spin border-2 border-white border-t-transparent rounded-full w-3 h-3"></span>
+          <span>Running</span>
+        } @else {
+          <span>Run</span>
+        }
+      </button>
+
+    </div>
+  </header>
+
+  <!-- Monaco Editor Container -->
+  <div class="flex-1 min-h-0 relative w-full h-full">
+    <div #editorContainer class="w-full h-full text-left" id="code-textarea"></div>
+  </div>
+
+</div>
+

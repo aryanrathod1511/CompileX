@@ -1,0 +1,62 @@
+<div 
+  class="flex flex-col h-full w-full transition-all duration-300 bg-bg-main text-text-main"
+>
+
+  <!-- Panel Header (Programiz Style) -->
+  <header 
+    class="flex items-center justify-between h-12 border-b flex-shrink-0 select-none px-4 bg-bg-panel-header border-border-main"
+  >
+    <div class="flex items-center gap-3">
+      <h2 
+        class="text-xs font-bold uppercase tracking-wider select-none font-sans text-text-main"
+      >
+        Output
+      </h2>
+    </div>
+    
+    <!-- Clear button -->
+    <button 
+      class="flex items-center gap-1.5 text-xs font-semibold px-4.5 py-1.5 rounded transition-all duration-150 border cursor-pointer select-none bg-bg-main border-border-button text-text-muted hover:bg-bg-button-hover hover:text-text-main shadow-sm"
+      (click)="onClearOutput()" 
+      id="clear-output-btn" 
+      title="Clear output console"
+    >
+      Clear
+    </button>
+  </header>
+
+  <!-- Output Area (Focusable, captures keyboard events directly) -->
+  <div 
+    class="flex-1 min-h-0 relative p-5 cursor-text transition-all duration-300 border-b border-transparent" 
+    [ngClass]="isFocused ? 'bg-bg-button-hover' : ''"
+    (click)="focusTerminal()"
+  >
+    <pre
+      class="w-full h-full bg-transparent overflow-y-auto font-mono text-[13.5px] leading-relaxed select-text whitespace-pre-wrap break-all focus:outline-none focus:ring-0 selection:bg-indigo-500/25 text-text-main"
+      #outputEl
+      tabindex="0"
+      id="terminal-output"
+      aria-live="polite"
+      aria-label="Terminal output"
+      (keydown)="onTerminalKeydown($event)"
+      (focus)="isFocused = true"
+      (blur)="isFocused = false"
+    >{{ output() || 'Run your code to see output here…' }}<span class="inline-block w-1.5 h-3.5 bg-violet-400 ml-0.5 animate-pulse" *ngIf="isInputEnabled"></span>
+      <!-- Inline Completion Indicators -->
+      @if (status() === 'finished' && output()) {
+        <span class="block mt-4 text-[#6b7280] font-semibold select-none font-mono">=== Code Execution Successful ===</span>
+      } @else if (status() === 'error') {
+        <span class="block mt-4 text-red-500 font-semibold select-none font-mono">=== Code Execution Failed ===</span>
+      }
+    </pre>
+  </div>
+
+  <!-- Terminal Instructions Footer (Capturing keystrokes prompt) -->
+  <div 
+    class="px-5 py-2.5 border-t text-[10px] flex items-center gap-2 select-none font-sans bg-bg-panel-header border-border-main text-text-muted" 
+    *ngIf="isInputEnabled"
+  >
+    <span class="text-xs animate-bounce">⌨️</span> Click inside the terminal and type inputs directly.
+  </div>
+
+</div>

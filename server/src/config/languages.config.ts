@@ -13,13 +13,13 @@ export const LANGUAGES: Record<string, LanguageConfig> = {
     filename: 'main.cpp',
     compileCmd: ['g++', '-O3', '/tmp/main.cpp', '-o', '/tmp/main'],
     runCmd: ['/tmp/main'],
-    memoryLimit: 256 * 1024 * 1024 // 256 MB
+    memoryLimit: 256 * 1024 * 1024
   },
   java: {
     image: 'eclipse-temurin:17-alpine',
     filename: 'Main.java',
     compileCmd: ['javac', '/tmp/Main.java'],
     runCmd: ['java', '-cp', '/tmp', 'Main'],
-    memoryLimit: 512 * 1024 * 1024 // 512 MB to prevent JVM compile / run OOMs
+    memoryLimit: 512 * 1024 * 1024
   }
 };

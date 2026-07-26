@@ -1,0 +1,98 @@
+<div class="flex h-full w-full min-h-0 overflow-hidden bg-bg-main text-text-main">
+
+  <!-- Left Language Sidebar (Programiz style) -->
+  <aside
+    class="w-[70px] flex flex-col items-center py-4 flex-shrink-0 justify-between select-none border-r bg-bg-sidebar border-border-main">
+    <div class="flex flex-col gap-2 w-full items-center">
+      @for (lang of languages; track lang.value) {
+      @if (lang.isSupported) {
+      <button (click)="onSelectLanguage(lang)"
+        [class]="'relative group flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 cursor-pointer '"
+        [ngClass]="language() === lang.value
+              ? 'bg-[#5856d6] text-white shadow-md'
+              : 'text-text-muted hover:text-text-main hover:bg-bg-button-hover hover:scale-105'"
+        [id]="'sidebar-lang-' + lang.value" [attr.aria-label]="'Switch to ' + lang.label">
+        <!-- Colorized SVG Icon -->
+        <div class="w-6 h-6 flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
+          [innerHTML]="getSafeSvg(lang.svgIcon)"></div>
+
+        <!-- Premium Floating Tooltip -->
+        <div
+          class="absolute left-16 px-2.5 py-1 rounded bg-zinc-950 text-white text-xs font-semibold whitespace-nowrap shadow-xl border border-zinc-800 pointer-events-none opacity-0 translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 z-50">
+          {{ lang.label }}
+        </div>
+      </button>
+      }
+      }
+    </div>
+
+  </aside>
+
+  <!-- Main Split Layout (Editor on left, Terminal on right, flush) -->
+  <div class="flex-1 min-h-0 h-full w-full grid grid-cols-1 lg:grid-cols-[1.12fr_0.88fr] gap-0">
+    <!-- Code Editor Section -->
+    <section class="flex flex-col min-h-0 h-full w-full border-r border-border-main" aria-label="Code editor">
+      <app-editor />
+    </section>
+
+    <!-- Output Terminal Section -->
+    <section class="flex flex-col min-h-0 h-full w-full bg-bg-main" aria-label="Terminal output">
+      <app-terminal />
+    </section>
+  </div>
+
+  <!-- Coming Soon Modal Overlay -->
+  @if (showModal()) {
+  <div
+    class="fixed inset-0 bg-zinc-950/70 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-all duration-300">
+    <div
+      class="bg-bg-main border border-border-main w-full max-w-md rounded-2xl p-6 shadow-2xl animate-in fade-in zoom-in duration-200"
+      role="dialog" aria-modal="true">
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-border-main">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🚀</span>
+          <h3 class="text-base font-bold text-text-main">Sandbox Coming Soon</h3>
+        </div>
+        <button (click)="closeModal()"
+          class="text-text-muted hover:text-text-main transition-colors p-1.5 rounded-lg hover:bg-bg-button-hover cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="py-5">
+        <p class="text-sm text-text-muted leading-relaxed font-sans">
+          The execution environment for <strong class="text-text-main">{{ attemptedLanguage()?.label }}</strong> is
+          currently under development.
+        </p>
+        <p class="text-xs text-text-muted/70 mt-2 font-sans">
+          We are setting up isolated secure Docker container templates for {{ attemptedLanguage()?.label }}. Meanwhile,
+          Python, C++, and Java are fully active!
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex flex-col gap-2 pt-4 border-t border-border-main">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted font-sans">Quick sandbox
+          switch:</span>
+        <div class="flex flex-wrap gap-2">
+          <button (click)="switchToLanguage('python')"
+            class="flex-1 py-2 px-3 bg-bg-main hover:bg-bg-button-hover border border-border-button text-xs font-semibold text-text-muted hover:text-text-main rounded-lg transition-all duration-150 cursor-pointer">
+            🐍 Python
+          </button>
+          <button (click)="switchToLanguage('cpp')"
+            class="flex-1 py-2 px-3 bg-bg-main hover:bg-bg-button-hover border border-border-button text-xs font-semibold text-text-muted hover:text-text-main rounded-lg transition-all duration-150 cursor-pointer">
+            ⚙️ C++
+          </button>
+          <button (click)="switchToLanguage('java')"
+            class="flex-1 py-2 px-3 bg-bg-main hover:bg-bg-button-hover border border-border-button text-xs font-semibold text-text-muted hover:text-text-main rounded-lg transition-all duration-150 cursor-pointer">
+            ☕ Java
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+</div>
