@@ -15,7 +15,10 @@ export class SandboxService {
       Image: config.image,
       Cmd: ['tail', '-f', '/dev/null'], // Keep container running
       Tty: true,
-      HostConfig: hostConfig,
+      HostConfig: {
+        ...hostConfig,
+        Memory: config.memoryLimit ?? hostConfig.Memory,
+      },
     });
 
     await container.start();
@@ -131,13 +134,13 @@ export class SandboxService {
       if (container) {
         try {
           await container.stop({ t: 0 });
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Inform the Gateway to terminate the client connection
       try {
         await PubSubService.publishStatus(clientId, 'exit');
-      } catch (e) {}
+      } catch (e) { }
     };
 
     const inputHandler = (channel: string, message: string) => {
@@ -160,13 +163,10 @@ export class SandboxService {
         // Setup input/control subscriptions
         await PubSubService.subscribe(clientId, ['input', 'control'], inputHandler);
 
-        // 1. Warm sandbox container already acquired from pool
-        await PubSubService.publishStatus(clientId, 'System: Sandbox container acquired...\r\n');
-
-        // 2. Upload source code
+        // Upload source code
         await SandboxService.uploadFile(container, code, config.filename);
 
-        // 3. Compile if necessary
+        //Compile if necessary
         if (config.compileCmd) {
           await PubSubService.publishStatus(clientId, 'System: Compiling program...\r\n');
           const compileResult = await SandboxService.runCommand(container, config.compileCmd, 10000);
@@ -186,7 +186,7 @@ export class SandboxService {
           'System: Compiled your code successfully!\r\n\r\n'
         );
 
-        // 4. Exec the run command with TTY enabled
+        // Exec the run command with TTY enabled
         const exec = await container.exec({
           Cmd: config.runCmd,
           AttachStdin: true,
@@ -195,7 +195,7 @@ export class SandboxService {
           Tty: true
         });
 
-        // 5. Start interactive execution with a safety runtime timeout
+        //Start interactive execution with a safety runtime timeout
         const timeoutLimit = 30000; // 30 seconds limit
         executionTimeout = setTimeout(async () => {
           console.log(`[SandboxService] Execution timeout reached for client: ${clientId}`);
@@ -204,12 +204,12 @@ export class SandboxService {
               clientId,
               `\r\n[System Error]: Execution timed out after ${timeoutLimit / 1000} seconds.\r\n`
             );
-          } catch (e) {}
+          } catch (e) { }
           await cleanup();
           resolve();
         }, timeoutLimit);
 
-        execStream = await exec.start({ hijack: true, stdin: true });
+        execStream = await exec.start({ hijack: true, stdin: true, Tty: true });
 
         // Forward stdout/stderr from process straight back to Redis output channel
         execStream.on('data', async (chunk: Buffer) => {
@@ -228,7 +228,7 @@ export class SandboxService {
         execStream.on('error', async (err: Error) => {
           try {
             await PubSubService.publishOutput(clientId, `\r\n[Sandbox Error]: ${err.message}\r\n`);
-          } catch (e) {}
+          } catch (e) { }
           await cleanup();
           resolve();
         });
@@ -237,7 +237,7 @@ export class SandboxService {
         console.error(`[SandboxService] Error during execution pipeline for ${clientId}:`, err);
         try {
           await PubSubService.publishOutput(clientId, `\r\n[System Error]: Execution pipeline failed: ${err.message}\r\n`);
-        } catch (e) {}
+        } catch (e) { }
         await cleanup();
         resolve();
       }

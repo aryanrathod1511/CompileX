@@ -6,10 +6,6 @@ import { SandboxService } from './sandbox.service';
 export class ContainerPoolManager {
   private static pools: Map<string, Container[]> = new Map();
 
-  /**
-   * Initializes the container pools for all supported languages.
-   * This should be called once on worker startup.
-   */
   public static async initializePools(): Promise<void> {
     for (const [language, config] of Object.entries(LANGUAGES)) {
       this.pools.set(language, []);
@@ -17,22 +13,13 @@ export class ContainerPoolManager {
     }
   }
 
-  /**
-   * Spawns a single container for the given language config, starts it,
-   * and pushes it to the respective language pool.
-   * @param language The name of the programming language.
-   */
+
   private static async refillContainer(language: string, config: any): Promise<void> {
     const con = await SandboxService.createContainer(config);
     this.pools.get(language)?.push(con);
   }
 
-  /**
-   * Retrieves an idle warm container from the pool for the requested language.
-   * If the pool is empty, falls back to creating one dynamically.
-   * @param language The programming language required.
-   * @returns A Promise resolving to a running Dockerode Container.
-   */
+
   public static async acquireContainer(language: string): Promise<Container> {
     try {
       const pool = this.pools.get(language);
@@ -55,9 +42,7 @@ export class ContainerPoolManager {
     }
   }
 
-  /**
-   * Gracefully shuts down and cleans up all containers currently stored in the pools.
-   */
+
   public static async shutdownPools(): Promise<void> {
     for (const [language, pool] of this.pools.entries()) {
       const stopPromises = pool.map(async (container) => {

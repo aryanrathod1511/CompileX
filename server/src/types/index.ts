@@ -3,6 +3,7 @@ export interface LanguageConfig {
   filename: string;
   compileCmd: string[] | null;
   runCmd: string[];
+  memoryLimit?: number;
 }
 
 export interface ExecutionRequest {
