@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "installCommand": "echo skip",
+  "functions": {
+    "frontend/dist/frontend/server/server.mjs": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "frontend/dist/frontend/server/server.mjs"
+    }
+  ]
+}
