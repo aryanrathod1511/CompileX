@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "prebuild": "node -e \"const fs=require('fs'),url=process.env.WS_URL||'';fs.writeFileSync('src/environments/environment.prod.ts','export const environment = { production: true, wsUrl: \\'' + url + '\\' };');\" && echo 'Generated environment.prod.ts'",
+    "prebuild": "node -e \"const fs=require('fs'),url=process.env.WS_URL||'';fs.mkdirSync('src/environments',{recursive:true});fs.writeFileSync('src/environments/environment.prod.ts','export const environment = { production: true, wsUrl: \\'' + url + '\\' };');\" && echo 'Generated environment.prod.ts'",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
