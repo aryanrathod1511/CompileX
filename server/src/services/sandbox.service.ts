@@ -1,9 +1,9 @@
 import { Container } from 'dockerode';
 import tar from 'tar-stream';
-import { docker } from './docker.client';
+import { docker } from '../infrastructure/docker.client';
 import { LanguageConfig } from '../types';
 import { hostConfig } from '../config/hostConfig';
-import { PubSubService } from '../services/pubsub.service';
+import { PubSubService } from './pubsub.service';
 
 export class SandboxService {
   /**
@@ -106,10 +106,10 @@ export class SandboxService {
    */
   public static async runInteractiveSession(
     clientId: string,
+    container: Container,
     config: LanguageConfig,
     code: string
   ): Promise<void> {
-    let container: Container | null = null;
     let execStream: any = null;
     let finished = false;
     let executionTimeout: NodeJS.Timeout | null = null;
@@ -160,9 +160,8 @@ export class SandboxService {
         // Setup input/control subscriptions
         await PubSubService.subscribe(clientId, ['input', 'control'], inputHandler);
 
-        // 1. Create sandbox container
-        await PubSubService.publishStatus(clientId, 'System: Initializing sandbox environment...\r\n');
-        container = await SandboxService.createContainer(config);
+        // 1. Warm sandbox container already acquired from pool
+        await PubSubService.publishStatus(clientId, 'System: Sandbox container acquired...\r\n');
 
         // 2. Upload source code
         await SandboxService.uploadFile(container, code, config.filename);
@@ -184,7 +183,7 @@ export class SandboxService {
 
         await PubSubService.publishStatus(
           clientId,
-          'System: Running executable in interactive terminal...\r\n\r\n'
+          'System: Compiled your code successfully!\r\n\r\n'
         );
 
         // 4. Exec the run command with TTY enabled
@@ -203,7 +202,7 @@ export class SandboxService {
           try {
             await PubSubService.publishOutput(
               clientId,
-              `\r\n[System Error]: Interactive execution timed out after ${timeoutLimit / 1000} seconds.\r\n`
+              `\r\n[System Error]: Execution timed out after ${timeoutLimit / 1000} seconds.\r\n`
             );
           } catch (e) {}
           await cleanup();

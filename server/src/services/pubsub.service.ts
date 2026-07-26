@@ -1,4 +1,4 @@
-import { redisPublish, redisSubscribe } from '../core/redis.client';
+import { redisPublish, redisSubscribe } from '../infrastructure/redis.client';
 
 export class PubSubService {
   /**

@@ -1,7 +1,7 @@
 import { WebSocket } from 'ws';
 import { IncomingMessage } from 'http';
 import { Queue } from 'bullmq';
-import { redisConnection } from '../core/redis.client';
+import { redisConnection } from '../infrastructure/redis.client';
 import { LANGUAGES } from '../config/languages.config';
 import { WebSocketPacket } from '../types';
 import { randomUUID } from 'crypto';
@@ -48,8 +48,6 @@ export function handleInteractiveConnection(ws: WebSocket, req: IncomingMessage)
           return ws.close();
         }
 
-        ws.send('System: Queueing execution task...\r\n');
-
         // Subscribe to client-specific output and status channels
         await PubSubService.subscribe(clientId, ['output', 'status'], messageHandler);
 
@@ -62,6 +60,8 @@ export function handleInteractiveConnection(ws: WebSocket, req: IncomingMessage)
           removeOnComplete: true,
           removeOnFail: true
         });
+
+        ws.send('System: Your execution is in queue...\r\n');
 
       } else {
         try {

@@ -9,9 +9,9 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - REDIS_HOST=promoted-eel-98869.upstash.io
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=gQAAAAAAAYI1AAIgcDFkZGEzZjlkZDI0MTg0NDQyODgzMjNiYjM4ZTlhNDAzYw
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
     deploy:
       resources:
         limits:

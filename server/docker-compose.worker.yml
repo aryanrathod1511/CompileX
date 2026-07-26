@@ -10,9 +10,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - NODE_ENV=production
-      - REDIS_HOST=promoted-eel-98869.upstash.io
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=gQAAAAAAAYI1AAIgcDFkZGEzZjlkZDI0MTg0NDQyODgzMjNiYjM4ZTlhNDAzYw
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
       - CONCURRENCY=4
     deploy:
       resources:
