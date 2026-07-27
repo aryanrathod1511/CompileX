@@ -1,17 +1,17 @@
 // ----- Language Types -----
 
-export type Language = 
-  | 'python' 
-  | 'r' 
-  | 'sql' 
-  | 'html' 
-  | 'java' 
-  | 'kotlin' 
-  | 'c' 
-  | 'cpp' 
-  | 'csharp' 
-  | 'javascript' 
-  | 'typescript' 
+export type Language =
+  | 'python'
+  | 'r'
+  | 'sql'
+  | 'html'
+  | 'java'
+  | 'kotlin'
+  | 'c'
+  | 'cpp'
+  | 'csharp'
+  | 'javascript'
+  | 'typescript'
   | 'go';
 
 export interface LanguageOption {
@@ -92,7 +92,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your name: ");
         String name = sc.nextLine();
-        System.out.println("Hello, " + name + "! Welcome to CompileX.");
+        System.out.println("Hello, " + name + "! Welcome to Code Executor.");
     }
 }
 `,
@@ -142,7 +142,7 @@ int main() {
     string name;
     cout << "Enter your name: ";
     cin >> name;
-    cout << "Hello, " << name << "! Welcome to CompileX." << endl;
+    cout << "Hello, " << name << "! Welcome to Code Executor." << endl;
     return 0;
 }
 `,

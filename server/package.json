@@ -8,7 +8,8 @@
     "start": "node --env-file=.env dist/index.js",
     "dev": "nodemon --watch src -e ts --exec \"node --env-file=.env -r ts-node/register src/index.ts\"",
     "worker:dev": "nodemon --watch src -e ts --exec \"node --env-file=.env -r ts-node/register src/worker.ts\"",
-    "worker:start": "node --env-file=.env dist/worker.js"
+    "worker:start": "node --env-file=.env dist/worker.js",
+    "benchmark": "node --env-file=.env -r ts-node/register src/benchmark.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
