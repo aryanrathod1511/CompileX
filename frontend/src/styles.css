@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@xterm/xterm/css/xterm.css";
+
 
 /* ── Theme CSS Variables ───────────────────────────── */
 /* Default: Light Theme (warm cream) */

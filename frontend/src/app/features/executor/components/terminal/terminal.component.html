@@ -25,30 +25,16 @@
     </button>
   </header>
 
-  <!-- Output Area (Focusable, captures keyboard events directly) -->
+  <!-- Output Area -->
   <div 
-    class="flex-1 min-h-0 relative p-5 cursor-text transition-all duration-300 border-b border-transparent" 
-    [ngClass]="isFocused ? 'bg-bg-button-hover' : ''"
+    class="flex-1 min-h-0 relative p-4 cursor-text transition-all duration-300"
     (click)="focusTerminal()"
   >
-    <pre
-      class="w-full h-full bg-transparent overflow-y-auto font-mono text-[13.5px] leading-relaxed select-text whitespace-pre-wrap break-all focus:outline-none focus:ring-0 selection:bg-indigo-500/25 text-text-main"
-      #outputEl
-      tabindex="0"
+    <div
+      #terminalContainer
+      class="w-full h-full overflow-hidden"
       id="terminal-output"
-      aria-live="polite"
-      aria-label="Terminal output"
-      (keydown)="onTerminalKeydown($event)"
-      (focus)="isFocused = true"
-      (blur)="isFocused = false"
-    >{{ output() || 'Run your code to see output here…' }}<span class="inline-block w-1.5 h-3.5 bg-violet-400 ml-0.5 animate-pulse" *ngIf="isInputEnabled"></span>
-      <!-- Inline Completion Indicators -->
-      @if (status() === 'finished' && output()) {
-        <span class="block mt-4 text-[#6b7280] font-semibold select-none font-mono">=== Code Execution Successful ===</span>
-      } @else if (status() === 'error') {
-        <span class="block mt-4 text-red-500 font-semibold select-none font-mono">=== Code Execution Failed ===</span>
-      }
-    </pre>
+    ></div>
   </div>
 
   <!-- Terminal Instructions Footer (Capturing keystrokes prompt) -->

@@ -24,29 +24,6 @@ export const initialState: ExecutionState = {
   isDarkTheme: false,
 };
 
-function processTerminalOutput(prev: string, chunk: string): string {
-  // 1. Strip ANSI escape codes
-  const ansiRegex = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
-  const cleanChunk = chunk.replace(ansiRegex, '');
-
-  // 2. Process backspace (\b or \x08 or \x7f delete)
-  let output = prev;
-  for (let i = 0; i < cleanChunk.length; i++) {
-    const char = cleanChunk[i];
-    if (char === '\b' || char === '\x7f') {
-      if (output.length > 0) {
-        if (output.endsWith('\n')) {
-          continue;
-        }
-        output = output.slice(0, -1);
-      }
-    } else {
-      output += char;
-    }
-  }
-  return output;
-}
-
 export const executionReducer = createReducer(
   initialState,
   on(ExecutionActions.changeLanguage, (state, { language }) => {
@@ -72,7 +49,7 @@ export const executionReducer = createReducer(
   })),
   on(ExecutionActions.appendOutput, (state, { chunk }) => ({
     ...state,
-    output: processTerminalOutput(state.output, chunk)
+    output: state.output + chunk
   })),
   on(ExecutionActions.clearOutput, state => ({
     ...state,
